@@ -10,6 +10,9 @@
 
     <title>jemeyer.net</title>
 
+    <!-- GA -->
+    <script src="../../js/ga.js"></script>
+
     <!-- jquery -->
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
@@ -38,8 +41,8 @@
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">  
             <div class="post-heading">
-              <h1>Ubuntu, TensorFlow, and Nvidia</h1>
-              <h2 class="subheading">How to get Nvidia drivers working with TensorFlow on the Ubuntu linux distro.</h2>
+              <h1>Ubuntu, TensorFlow, and NVIDIA</h1>
+              <h2 class="subheading">How to get NVIDIA drivers working with TensorFlow on the Ubuntu linux distro.</h2>
               <span class="meta">Posted by
                   Joe Meyer
                   on January 1, 2016</span>
@@ -56,30 +59,30 @@
           <div class="col-lg-8 col-md-10 mx-auto">
             <p>The last week I've been migrating my main desktop machine from Windows 10 to Ubuntu. The main reason for the transfer was to have a unified development environment for my brother and I to work on our TensorFlow application. TensorFlow does not run on Windows (easily) and the only reason I was using Windows was for gaming, which will be an uphill battle in Ubuntu.</p>
 
-            <p>TensorFlow has a nice feature to allow computation using Nvidia CUDA technology. Luckily, I have a 980 Ti for gaming which does extremely well at CUDA computation. This card was the main headache during this whole process.</p>
+            <p>TensorFlow has a nice feature to allow computation using NVIDIA CUDA technology. Luckily, I have a 980 Ti for gaming which does extremely well at CUDA computation. This card was the main headache during this whole process.</p>
 
-            <p>If anyone has a new Nvidia card and has had a ton of issues with <a href="http://askubuntu.com/questions/141606/how-to-fix-the-system-is-running-in-low-graphics-mode-error">low graphics mode</a>, getting CUDA setup, or overall Ubuntu configuration, hopefully this information will help you.</p>
+            <p>If anyone has a new NVIDIA card and has had a ton of issues with <a href="http://askubuntu.com/questions/141606/how-to-fix-the-system-is-running-in-low-graphics-mode-error">low graphics mode</a>, getting CUDA setup, or overall Ubuntu configuration, hopefully this information will help you.</p>
 
             <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
 
             <p>First of all do NOT use:</p>
             <pre class="bash"> sudo apt-get install nvidia-current</pre>
 
-            <p>The driver this will install is around the 302 version at the time of writing this post. The newest version according to the <a href="http://www.nvidia.com/object/unix.html">Nvidia site</a> is 352 for long-lived and 358 for short-lived.</p>
+            <p>The driver this will install is around the 302 version at the time of writing this post. The newest version according to the <a href="http://www.nvidia.com/object/unix.html">NVIDIA site</a> is 352 for long-lived and 358 for short-lived.</p>
 
             <p>Until you get a working driver up don't think about trying to have a GUI. I would disconnect my 980 Ti, install Ubuntu 14.04 LTS, and everything would work fine. When shutdown occurs, I plugged in the GPU and booted up, only to be greeted by 'low graphics mode' which would not respond if I told it to use low graphics mode and would only allow the command line interface with Ubuntu. Even if I tried to install nvidia-current beforehand, it would default to this behavior.</p>
 
-            <p>From what I have seen, that driver supports up to around the 600 series, which is extremely outdated for 'current'. For some reason, even the ppa for the nvidia drivers had the same behavior of low graphics mode, and no nvidia-xconfig being present.</p>
+            <p>From what I have seen, that driver supports up to around the 600 series, which is extremely outdated for 'current'. For some reason, even the ppa for the NVIDIA drivers had the same behavior of low graphics mode, and no nvidia-xconfig being present.</p>
 
-            <p>I thought I finally figured it out when I installed the latest driver straight from Nvidia. The version was 352.63 and I installed with the runfile and did all proper pre and post steps. This allowed me to finally boot into Ubuntu (YAY!) and I thought all was right with the world. Now onto TensorFlow...</p>
+            <p>I thought I finally figured it out when I installed the latest driver straight from NVIDIA. The version was 352.63 and I installed with the runfile and did all proper pre and post steps. This allowed me to finally boot into Ubuntu (YAY!) and I thought all was right with the world. Now onto TensorFlow...</p>
 
-            <p>For GPU enabled computation you will need the <a href="https://developer.nvidia.com/cuda-toolkit-70">CUDA Toolkit 7.0</a> and <a href="https://developer.nvidia.com/rdp/cudnn-archive">CUDNN Toolkit 6.5</a>. These are both older versions of their respective toolkits, and the links will go to the archived versions. Upon downloading the CUDA toolkit (install this first), you will execute the run file and follow the prompts. This is where the second main snag came in - the toolkit needed at least version 345 (I had 352) of the Nvidia drivers. It didn't see mine as new enough.</p>
+            <p>For GPU enabled computation you will need the <a href="https://developer.nvidia.com/cuda-toolkit-70">CUDA Toolkit 7.0</a> and <a href="https://developer.nvidia.com/rdp/cudnn-archive">CUDNN Toolkit 6.5</a>. These are both older versions of their respective toolkits, and the links will go to the archived versions. Upon downloading the CUDA toolkit (install this first), you will execute the run file and follow the prompts. This is where the second main snag came in - the toolkit needed at least version 345 (I had 352) of the NVIDIA drivers. It didn't see mine as new enough.</p>
 
             <p>Easy enough, I'll simply uninstall the existing driver and use the one bundled with the toolkit (it will prompt to ask if you want this driver). It goes through but again the computer doesn't fully recognize the 980 Ti and just sees a generic GPU. When trying to run a TensorFlow neural net it will spit out</p>
 
             <pre class="bash"> >no CUDA-capable device is detected</pre>
 
-            <p>This was from Ubuntu not fully seeing the GPU. The last step was to sneak in the newer driver installed earlier that we had to removed to install the CUDA toolkit. It blocked the installation even though it was new enough, but the one it installed wasn't quite up-to-date to support the new Maxwell chip in the 980 Ti. You can easily install the newest driver by going to <a href="http://www.nvidia.com/object/unix.html">Nvidia's site</a> or simply execute</p>
+            <p>This was from Ubuntu not fully seeing the GPU. The last step was to sneak in the newer driver installed earlier that we had to removed to install the CUDA toolkit. It blocked the installation even though it was new enough, but the one it installed wasn't quite up-to-date to support the new Maxwell chip in the 980 Ti. You can easily install the newest driver by going to <a href="http://www.nvidia.com/object/unix.html">NVIDIA's site</a> or simply execute</p>
             <pre class="bash"> sudo apt-get install nvidia-352</pre>
 
             <p>Don't forget to reconfigure your xconfig file using</p>
@@ -100,7 +103,7 @@
 
             <p>If the deviceQuery command says it can't find a GPU, the drivers are not up to date and you should reinstall your 352 drivers. If that passes, run the bandwidthTest to make sure it can actually send information to and from the GPU. After all of these pass, try and run a TensorFlow script again and VIOLA! You should be running through epochs much faster than before. We were running batches of 200 images and each epoch took around a second on the CPU, and when I finally was able to run on the 980 Ti it was about 15 a second.</p>
           
-            <p>Every time I reboot, there seems to be an 'unlinking' of the CUDA Toolkit. You can tell when this happens by trying to run a TensorFlow script and it defaults to CPU mode. Simply rerun the deviceQuery script again, it will give you another 'pass' message, and then tensorflow should see your GPU.</p>
+            <p>Every time I reboot, there seems to be an 'unlinking' of the CUDA Toolkit. You can tell when this happens by trying to run a TensorFlow script and it defaults to CPU mode. Simply rerun the deviceQuery script again, it will give you another 'pass' message, and then TensorFlow should see your GPU.</p>
 
             <p>I hope if you ran across this post and have had similar issues you were able to resolve them. It was a painful transition and I almost admitted defeat multiple times and was about to switch back to Windows. I'm glad I didn't.</p>
           </div>
