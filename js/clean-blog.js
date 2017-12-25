@@ -1,5 +1,8 @@
 (function($) {
   "use strict"; // Start of use strict
+  
+  $("#navbar").load("navbar.html");
+  $("#footer").load("footer.html");
 
   // Floating label headings for the contact form
   $("body").on("input propertychange", ".floating-label-form-group", function(e) {
