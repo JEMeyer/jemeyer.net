@@ -32,7 +32,7 @@
     <div id="navbar"></div>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('../../img/post-bg.jpg')">
+    <header class="masthead" style="background-image: url('../../img/cudablock.jpg')">
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
@@ -54,42 +54,55 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
-            <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+            <p>The last week I've been migrating my main desktop machine from Windows 10 to Ubuntu. The main reason for the transfer was to have a unified development environment for my brother and I to work on our TensorFlow application. TensorFlow does not run on Windows (easily) and the only reason I was using Windows was for gaming, which will be an uphill battle in Ubuntu.</p>
 
-            <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+            <p>TensorFlow has a nice feature to allow computation using Nvidia CUDA technology. Luckily, I have a 980 Ti for gaming which does extremely well at CUDA computation. This card was the main headache during this whole process.</p>
 
-            <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+            <p>If anyone has a new Nvidia card and has had a ton of issues with <a href="http://askubuntu.com/questions/141606/how-to-fix-the-system-is-running-in-low-graphics-mode-error">low graphics mode</a>, getting CUDA setup, or overall Ubuntu configuration, hopefully this information will help you.</p>
 
             <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
 
-            <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
+            <p>First of all do NOT use:</p>
+            <pre class="bash"> sudo apt-get install nvidia-current</pre>
 
-            <h2 class="section-heading">The Final Frontier</h2>
+            <p>The driver this will install is around the 302 version at the time of writing this post. The newest version according to the <a href="http://www.nvidia.com/object/unix.html">Nvidia site</a> is 352 for long-lived and 358 for short-lived.</p>
 
-            <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
+            <p>Until you get a working driver up don't think about trying to have a GUI. I would disconnect my 980 Ti, install Ubuntu 14.04 LTS, and everything would work fine. When shutdown occurs, I plugged in the GPU and booted up, only to be greeted by 'low graphics mode' which would not respond if I told it to use low graphics mode and would only allow the command line interface with Ubuntu. Even if I tried to install nvidia-current beforehand, it would default to this behavior.</p>
 
-            <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
+            <p>From what I have seen, that driver supports up to around the 600 series, which is extremely outdated for 'current'. For some reason, even the ppa for the nvidia drivers had the same behavior of low graphics mode, and no nvidia-xconfig being present.</p>
 
-            <blockquote class="blockquote">The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
+            <p>I thought I finally figured it out when I installed the latest driver straight from Nvidia. The version was 352.63 and I installed with the runfile and did all proper pre and post steps. This allowed me to finally boot into Ubuntu (YAY!) and I thought all was right with the world. Now onto TensorFlow...</p>
 
-            <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
+            <p>For GPU enabled computation you will need the <a href="https://developer.nvidia.com/cuda-toolkit-70">CUDA Toolkit 7.0</a> and <a href="https://developer.nvidia.com/rdp/cudnn-archive">CUDNN Toolkit 6.5</a>. These are both older versions of their respective toolkits, and the links will go to the archived versions. Upon downloading the CUDA toolkit (install this first), you will execute the run file and follow the prompts. This is where the second main snag came in - the toolkit needed at least version 345 (I had 352) of the Nvidia drivers. It didn't see mine as new enough.</p>
 
-            <h2 class="section-heading">Reaching for the Stars</h2>
+            <p>Easy enough, I'll simply uninstall the existing driver and use the one bundled with the toolkit (it will prompt to ask if you want this driver). It goes through but again the computer doesn't fully recognize the 980 Ti and just sees a generic GPU. When trying to run a TensorFlow neural net it will spit out</p>
 
-            <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
+            <pre class="bash"> >no CUDA-capable device is detected</pre>
 
-            <a href="#">
-              <img class="img-fluid" src="../../img/post-sample-image.jpg" alt="">
-            </a>
-            <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
+            <p>This was from Ubuntu not fully seeing the GPU. The last step was to sneak in the newer driver installed earlier that we had to removed to install the CUDA toolkit. It blocked the installation even though it was new enough, but the one it installed wasn't quite up-to-date to support the new Maxwell chip in the 980 Ti. You can easily install the newest driver by going to <a href="http://www.nvidia.com/object/unix.html">Nvidia's site</a> or simply execute</p>
+            <pre class="bash"> sudo apt-get install nvidia-352</pre>
 
-            <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
+            <p>Don't forget to reconfigure your xconfig file using</p>
+            <pre class="bash"> nvidia-xconfig</pre>
 
-            <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
+            <p>After all this, setup (follow the CUDA and CUDNN instructions on their sites) I was finally ready to harness the 980 Ti for TensorFlow. Follow the instruction for</p>
+            <pre class="bash"> ./configure</pre>
 
-            <p>Placeholder text by
-              <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
-              <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+            <p>within the TensorFlow repo you'll need to download. That passing is the first step to success. After this, fire up one of the tutorial files in the TensorFlow website, or visit <a href="https://github.com/JEMeyer/tensorflow-tutorials">my repo</a> to get those bundled. Upon running these, you'll likely get a similar error as earlier with the no CUDA-enabled device detected. Go to where the CUDA Toolkit installed the samples (if you didn't download them re-run the CUDA run file and hit 'yes'. Default installation is at </p>
+            <pre class="bash"> /home/user/NVIDIA_CUDA-7.0_Samples</pre>
+
+            <p>Build all the samples and run</p>
+            <pre class="bash"> cd /home/username/NVIDIA_CUDA-7.0_Samples/
+ make
+ cd bin/x86_64/linux/release/
+ sudo ./deviceQuery
+ sudo ./bandwidthTest</pre>
+
+            <p>If the deviceQuery command says it can't find a GPU, the drivers are not up to date and you should reinstall your 352 drivers. If that passes, run the bandwidthTest to make sure it can actually send information to and from the GPU. After all of these pass, try and run a TensorFlow script again and VIOLA! You should be running through epochs much faster than before. We were running batches of 200 images and each epoch took around a second on the CPU, and when I finally was able to run on the 980 Ti it was about 15 a second.</p>
+          
+            <p>Every time I reboot, there seems to be an 'unlinking' of the CUDA Toolkit. You can tell when this happens by trying to run a TensorFlow script and it defaults to CPU mode. Simply rerun the deviceQuery script again, it will give you another 'pass' message, and then tensorflow should see your GPU.</p>
+
+            <p>I hope if you ran across this post and have had similar issues you were able to resolve them. It was a painful transition and I almost admitted defeat multiple times and was about to switch back to Windows. I'm glad I didn't.</p>
           </div>
         </div>
       </div>
