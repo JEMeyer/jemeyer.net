@@ -35,7 +35,7 @@
     <div id="navbar"></div>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('../../img/post-bg.jpg')">
+    <header class="masthead" style="background-image: url('../../img/post_headers/convFilters.jpg')">
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
@@ -57,42 +57,53 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
-            <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+            <p>I just wanted to give a little update on how our the convolutional neural net is going. Overall, the answer is: slow but promising.</p>
 
-            <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+            <p>We (<a href="https://github.com/jrmeyer">Josh</a> and I) modified our <a href="https://github.com/JEMeyer/image-id/blob/master/visualize_data.py">visualization script</a> which uses matplotlib to save off our graphs instead of just showing them each time we run the script. This post will mainly just be showing some of our graphs with a little blurb about what we did for each run.</p>
 
-            <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+            <p>Ideally, I'll be writing up something about our overall plan soon. I'll also be likely making a post touching base on how the transition was from Windows to Ubuntu for development. Those will be for another day.</p>
 
-            <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
+            <p>Onto the data.</p>
 
-            <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
+            <p>Our convolutional network script now takes most of the parameters as variables. The only thing hardcoded now is (1) the size of our convolution filters at each layer and (2) the size of pooling at each layer.</p>
 
-            <h2 class="section-heading">The Final Frontier</h2>
+            <p>For these graphs, the filter size is a 5X5 pixel patch for the two convolution layers. We use a 2x2 max pooling after each convolution. We zero-pad our image before convolving, and as such the image only shrinks during the pooling phase. We used a batch size of 200 training images throughout these tests.</p>
 
-            <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
+            <p>Our original input images are 128x128 pixels. They are fed in as gray-scale and have the shape 128x128x1. After the two layers of convolutions and poolings, we end up with 32x32 pixel filters which are fed into the softmax regression.</p>
 
-            <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
+            <p>This first graph shows our cost over 10,000 iterations and took roughly 30 minutes to run. We had 10 convolution filters in the first layer and 20 in the second. The two lines show our training accuracy and our testing accuracy. The testing data was completely separate from the training. After every 100 epochs, we tested the weights on the random training batch set from that particular epoch in addition to the held-out testing images.</p>
 
-            <blockquote class="blockquote">The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
+            <img class="img-fluid" src="../../img/graphs/filter_post/10kEpoch1020conv.png" alt="10k Epoch 10 20 Conv">
+            
+            <p>As you can see, at about 1500 iterations we get up to about 90% accuracy on the testing data and then plateau.</p>
 
-            <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
+            <p>The next stop was to bump up the number of filters to 32 for the first layer and 64 for the second. We get the following:</p>
 
-            <h2 class="section-heading">Reaching for the Stars</h2>
+            <img class="img-fluid" src="../../img/graphs/filter_post/10kEpoch3264conv.png" alt="10k Epoch 32 64 Conv">
+            
+            <p>As you can see, it did terribly. We hit a snag with this behavior for several hours. No matter what we tried, 10 filters and 20 filters seemed the only sweet spot. We double-checked all of our matrix dimension calculations thinking it was calculating something wrong somewhere. No matter what we did, our math looked good, but the output was ALWAYS guessing between our two classes (hence 50% accuracy) for our testing set, which was split evenly with our two classifications.</p>
 
-            <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
+            <p>We re-ran the data, but this time bumped up the epochs to 30,000 and putting our filter count back to 10 and 20.</p>
 
-            <a href="#">
-              <img class="img-fluid" src="../../img/post-sample-image.jpg" alt="">
-            </a>
-            <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
+            <img class="img-fluid" src="../../img/graphs/filter_post/30kEpoch1020conv.png" alt="30k Epoch 10 20 Conv">
+            
+            <p>Here we finally have some meaningful data again. It still got stuck in the 50% guessing game for the first 4,000 iterations or so. It was unfortunately one of those 'we changed a lot of variables' situations where we didn't exactly know when we made it have this behavior. We looked in our git history but the only changes we made were real errors that needed correcting, plus some commenting. We started to just chalk up to possible faulty fitting or bad optimization with the Adam Optimizer. We started to decrease the learning rate to get a more gradual increase. This will obviously require us to train more iterations since it will be less aggressive with the changes made to the weights.</p>
 
-            <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
+            <p>We decided to 'go big' and ran for 350,000 iterations. This took my 980 Ti overnight to finally finish training.</p>
 
-            <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
+            <img class="img-fluid" src="../../img/graphs/filter_post/350kEpoch1020conv.png" alt="350k Epoch 10 20 Conv">
+            
+            <p>We finally had something that looks reasonable! With our algorithm looking pretty solid, it was time to start playing with different convolution settings.</p>
 
-            <p>Placeholder text by
-              <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
-              <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+            <p>This was only 5,000 iterations but each convolution had 15 filters.</p>
+
+            <img class="img-fluid" src="../../img/graphs/filter_post/5kEpoch1515conv.png" alt="5k Epoch 15 15 Conv">
+
+            <p>That's all the graphs we've got for now.</p>
+
+            <p>We'll start playing with how convolution size and pooling size affects the performance. We'll also try to crank up the number of filters in our layers, and massively increase our iteration count to help get it out of the 50/50 rut.</p>
+
+            <p>The filter count fiasco could have been due to us only having two classifications. Increasing the number of filters just gave it too many weights that could affect the outcome for only two types of images. I've said <I>images</I> just to keep this general. We will likely have a post coming out soon going over our overall process and what images/classes/techniques we've done along the way.</p>
           </div>
         </div>
       </div>
