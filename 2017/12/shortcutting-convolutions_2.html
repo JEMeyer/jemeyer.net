@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>jemeyer.net</title>
+
+    <!-- GA -->
+    <script src="../../js/ga.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link href="../../css/clean-blog.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <div id="navbar"></div>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('../../img/post_headers/convolve.png')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="post-heading">
+              <h1>Shortcutting Convolutions Pt. 2</h1>
+              <h2 class="subheading">How to run all convolutions in a single layer with one matrix * matrix multiplication.</h2>
+              <span class="meta">Posted by
+                  Joe Meyer
+                  on December 26, 2017</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <p>I have been working on a from scratch (minus <a href="https://numerics.mathdotnet.com/">a math libaray) neural network framework written in C# named <a href="https://github.com/JEMeyer/Neural.NET">Neural.NET</a>. My goal has been to not only use this as a way to better understand the inner workins of neural networks and machine learning in general, but to make it more accessible to developers. I helped my brother with a Python neural network for one of his classes and have been interested ever since.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div id="disqus_thread" class="col-lg-8 col-md-10 mx-auto"></div>
+    <script>
+    /* Disqus config */
+    var disqus_config = function () {
+      this.page.url = 'http://www.jemeyer.net/2017/12/shortcutting-convolutions_2.html';
+      this.page.identifier = '2017/12/shortcutting-convolutions_2.html';
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jemeyer.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', + new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    <hr>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+    
+    <!-- Bootstrap core JavaScript -->
+    <script src="../../vendor/jquery/jquery.min.js"></script>
+    <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="../../js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>
